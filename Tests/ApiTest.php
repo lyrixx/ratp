@@ -25,6 +25,19 @@ class ApiTest extends \PHPUnit_Framework_TestCase
         $this->api = new Api($goutte);
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Parameter "line" is missing for stop #1.
+     */
+    public function testGetDatasWithInvalidValue()
+    {
+        $stops = $this->api->getStops(array(
+            array('type' => Api::TYPE_METRO, 'line' => '13', 'stop' => 'Porte de Saint-Ouen'),
+            array('foo' => 'bar'),
+            array('type' => Api::TYPE_METRO, 'line' => '15', 'stop' => 'Porte de Saint-Ouen'),
+        ));
+    }
+
     public function testGetDatasWithMetro()
     {
         $this->guzzleMockPlugin->addResponse($this->getResponse('metro-full-A.html'));

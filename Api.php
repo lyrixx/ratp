@@ -21,8 +21,9 @@ class Api
 
     public function getStops(array $stopsData)
     {
-        $stops = array();
+        $this->validateStops($stopsData);
 
+        $stops = array();
         foreach ($this->buildQueries($stopsData) as $stopData) {
             $id = sprintf('%s.%s', $stopData['line'], $stopData['stop']);
 
@@ -66,6 +67,17 @@ class Api
         }
 
         return array_values($stops);
+    }
+
+    private function validateStops($stops)
+    {
+        foreach ($stops as $key => $stop) {
+            foreach (array('line', 'stop', 'type') as $parameter) {
+                if (!array_key_exists($parameter, $stop)) {
+                    throw new \InvalidArgumentException(sprintf('Parameter "%s" is missing for stop #%s.', $parameter, $key));
+                }
+            }
+        }
     }
 
     private function buildQueries(array $stops = array())
