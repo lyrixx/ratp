@@ -60,7 +60,6 @@ class Stop
             throw new \InvalidArgumentException(sprintf('The direction "%s" does not exist', $directionName));
         }
 
-        // var_dump($this->directions);
         return $this->directions[$directionName];
     }
 }
