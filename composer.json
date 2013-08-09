@@ -1,0 +1,28 @@
+{
+    "name": "lyrixx/ratp",
+    "description": "A little crawler/sdk for retrieve in real time information about transport in Paris",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Grégoire Pineau",
+            "email": "lyrixx@lyrixx.info"
+        }
+    ],
+    "require": {
+        "fabpot/goutte": "1.0.*"
+    },
+    "require-dev": {
+        "guzzle/plugin-mock": "~3.4"
+    },
+    "autoload": {
+        "psr-0": {
+            "Lyrixx\\Ratp\\": ""
+        }
+    },
+    "target-dir": "Lyrixx/Ratp",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
