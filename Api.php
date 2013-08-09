@@ -35,10 +35,9 @@ class Api
             }
 
             if (!isset($stops[$id])) {
-                $stops[$id] = $stop = new Stop($stopData['line'], $name, $stopData['type']);
-            } else {
-                $stops[$id] = $stop;
+                $stops[$id] = new Stop($stopData['line'], $name, $stopData['type']);
             }
+            $stop = $stops[$id];
 
             foreach ($this->client->getCrawler()->filter('.bg1, .bg3') as $child) {
                 // Hack to remove all service messages
