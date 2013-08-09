@@ -16,22 +16,20 @@ class Api
     {
         $this->client = $client ?: new Client();
         $this->entrypoint = $entrypoint ?: 'http://wap.ratp.fr/siv/schedule';
+        $this->client->setServerParameter('HTTP_USER_AGENT', 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:19.0) Gecko/20100101 Firefox/19.0');
     }
 
     public function getStops(array $stopsData)
     {
         $stops = array();
 
-        $client = $this->client;
-        $client->setServerParameter('HTTP_USER_AGENT', 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:19.0) Gecko/20100101 Firefox/19.0');
-
         foreach ($this->buildQueries($stopsData) as $stopData) {
             $id = sprintf('%s.%s', $stopData['line'], $stopData['stop']);
 
-            $client->request('GET', $stopData['query']);
+            $this->client->request('GET', $stopData['query']);
 
             try {
-                $name = $client->getCrawler()->filter('.bwhite')->eq(1)->text();
+                $name = $this->client->getCrawler()->filter('.bwhite')->eq(1)->text();
             } catch (\InvalidArgumentException $e) {
                 continue;
             }
@@ -42,9 +40,7 @@ class Api
                 $stops[$id] = $stop;
             }
 
-            $destinations = array();
-
-            foreach ($client->getCrawler()->filter('.bg1, .bg3') as $child) {
+            foreach ($this->client->getCrawler()->filter('.bg1, .bg3') as $child) {
                 // Hack to remove all service messages
                 if ("\n" !== $child->nodeValue[0]) {
                     continue;
