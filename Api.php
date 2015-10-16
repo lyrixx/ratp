@@ -8,9 +8,16 @@ class Api
 {
     CONST TYPE_METRO = 'metro';
     CONST TYPE_BUS   = 'bus';
+    CONST TYPE_TRAM  = 'tram';
 
     private $client;
     private $entrypoint;
+
+    static $typeConversion = array(
+        self::TYPE_METRO => 'M',
+        self::TYPE_BUS   => 'B',
+        self::TYPE_TRAM  => 'B',
+    );
 
     public function __construct(Client $client = null, $entrypoint = null)
     {
@@ -89,6 +96,9 @@ class Api
                 $stopsTmp[] = array_replace($stop, array('query' => $query));
                 $query = $this->buildUrl($stop['type'], $stop['line'], $stop['stop'], 'R');
                 $stopsTmp[] = array_replace($stop, array('query' => $query));
+            } elseif (static::TYPE_TRAM == $stop['type']) {
+                $query = $this->buildUrl($stop['type'], $stop['line'], $stop['stop']);
+                $stopsTmp[] = array_replace($stop, array('query' => $query));
             } else {
                 $query = $this->buildUrl($stop['type'], $stop['line'], $stop['stop']);
                 $stopsTmp[] = array_replace($stop, array('query' => $query));
@@ -103,7 +113,7 @@ class Api
         $params = array(
             'service' => 'next',
             'reseau' => $type,
-            'lineid' => strtoupper($type[0]) .$line,
+            'lineid' => self::$typeConversion[$type].$line,
             'stationname' => $stop,
         );
 
