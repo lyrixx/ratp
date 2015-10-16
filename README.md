@@ -23,7 +23,7 @@ $stops[0]->getName(); // 'General Leclerc-Victor Hugo'
 $stops[0]->getLine(); // '138'
 $stops[0]->getType(); // 'metro'
 
-$direction = $stops[0]->getDirection('Ermont-Eaubonne RER');
+$direction = $stops[0]->getDirection('Ermont-Eaubonne RER.');
 foreach($direction->getSchedule() as $time) {
     echo $time; // '11 mn';
 }
