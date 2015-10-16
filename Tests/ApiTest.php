@@ -111,6 +111,32 @@ class ApiTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(array('30 mn'), iterator_to_array($schedule));
     }
 
+    public function testGetDatasWithTram()
+    {
+        $this->guzzleMockPlugin->addResponse($this->getResponse('tram-full.html'));
+        $stops = $this->api->getStops(array(array('type' => Api::TYPE_TRAM, 'line' => 'T2', 'stop' => 'Charlebourg', 'directionsens' => 'R')));
+
+        $this->assertCount(1, $stops);
+
+        $stop = reset($stops);
+        $this->assertInstanceOf('Lyrixx\Ratp\Stop', $stop);
+        $this->assertSame('Charlebourg', $stop->getName());
+        $this->assertSame('T2', $stop->getLine());
+        $this->assertSame('tram', $stop->getType());
+
+        $directions = $stop->getDirections();
+        $this->assertCount(1, $directions);
+
+        $this->assertArrayHasKey('Porte de Versailles', $directions);
+        $direction = $directions['Porte de Versailles'];
+        $this->assertInstanceOf('Lyrixx\Ratp\Direction', $direction);
+        $this->assertSame('Porte de Versailles', $direction->getName());
+        $schedule = $direction->getSchedule();
+        $this->assertInstanceOf('Lyrixx\Ratp\Schedule', $schedule);
+        $this->assertCount(2, $schedule);
+        $this->assertSame(array('4 mn', '11 mn'), iterator_to_array($schedule));
+    }
+
     public function tearDown()
     {
         $this->guzzleMockPlugin = null;

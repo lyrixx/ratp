@@ -13,18 +13,18 @@ Usage
 
 $api = new Lyrixx\Ratp\Api();
 
-$stops = array(
-    array('line' => '138', 'stop' => 'General Leclerc-Victor Hugo', 'type' => Lyrixx\Rapt\::TYPE_BUS),
+$stop = array(
+    array('line' => '138', 'stop' => 'General Leclerc-Victor Hugo', 'type' => $api::TYPE_BUS),
 );
 
-$stops = $api->getStops($stops);
+$stops = $api->getStops($stop);
 
-$stop[0]->getName(); // 'General Leclerc-Victor Hugo'
-$stop[0]->getLine(); // '138'
-$stop[0]->getType(); // 'metro'
+$stops[0]->getName(); // 'General Leclerc-Victor Hugo'
+$stops[0]->getLine(); // '138'
+$stops[0]->getType(); // 'metro'
 
-$direction = $stop[0]->getDirection('Saint-Gratien RER');
-foreach($direction->getSchedules() => $time) {
+$direction = $stops[0]->getDirection('Ermont-Eaubonne RER.');
+foreach($direction->getSchedule() as $time) {
     echo $time; // '11 mn';
 }
 ```
