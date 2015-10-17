@@ -91,16 +91,13 @@ class Api
     {
         $stopsTmp = array();
         foreach ($stops as $stop) {
-            if (static::TYPE_METRO ==  $stop['type']) {
-                $query = $this->buildUrl($stop['type'], $stop['line'], $stop['stop'], 'A');
-                $stopsTmp[] = array_replace($stop, array('query' => $query));
-                $query = $this->buildUrl($stop['type'], $stop['line'], $stop['stop'], 'R');
-                $stopsTmp[] = array_replace($stop, array('query' => $query));
-            } elseif (static::TYPE_TRAM == $stop['type']) {
+            if (static::TYPE_BUS ==  $stop['type']) {
                 $query = $this->buildUrl($stop['type'], $stop['line'], $stop['stop']);
                 $stopsTmp[] = array_replace($stop, array('query' => $query));
             } else {
-                $query = $this->buildUrl($stop['type'], $stop['line'], $stop['stop']);
+                $query = $this->buildUrl($stop['type'], $stop['line'], $stop['stop'], 'A');
+                $stopsTmp[] = array_replace($stop, array('query' => $query));
+                $query = $this->buildUrl($stop['type'], $stop['line'], $stop['stop'], 'R');
                 $stopsTmp[] = array_replace($stop, array('query' => $query));
             }
         }
