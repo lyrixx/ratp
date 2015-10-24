@@ -113,8 +113,10 @@ class ApiTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDatasWithTram()
     {
-        $this->guzzleMockPlugin->addResponse($this->getResponse('tram-full.html'));
-        $stops = $this->api->getStops(array(array('type' => Api::TYPE_TRAM, 'line' => 'T2', 'stop' => 'Charlebourg', 'directionsens' => 'R')));
+        $this->guzzleMockPlugin->addResponse($this->getResponse('tram-full-A.html'));
+        $this->guzzleMockPlugin->addResponse($this->getResponse('tram-full-R.html'));
+
+        $stops = $this->api->getStops(array(array('type' => Api::TYPE_TRAM, 'line' => 'T2', 'stop' => 'Charlebourg')));
 
         $this->assertCount(1, $stops);
 
@@ -125,7 +127,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('tram', $stop->getType());
 
         $directions = $stop->getDirections();
-        $this->assertCount(1, $directions);
+        $this->assertCount(2, $directions);
 
         $this->assertArrayHasKey('Porte de Versailles', $directions);
         $direction = $directions['Porte de Versailles'];
@@ -134,7 +136,16 @@ class ApiTest extends \PHPUnit_Framework_TestCase
         $schedule = $direction->getSchedule();
         $this->assertInstanceOf('Lyrixx\Ratp\Schedule', $schedule);
         $this->assertCount(2, $schedule);
-        $this->assertSame(array('4 mn', '11 mn'), iterator_to_array($schedule));
+        $this->assertSame(array('10 mn', '24 mn'), iterator_to_array($schedule));
+
+        $this->assertArrayHasKey('Pont de Bezons', $directions);
+        $direction = $directions['Pont de Bezons'];
+        $this->assertInstanceOf('Lyrixx\Ratp\Direction', $direction);
+        $this->assertSame('Pont de Bezons', $direction->getName());
+        $schedule = $direction->getSchedule();
+        $this->assertInstanceOf('Lyrixx\Ratp\Schedule', $schedule);
+        $this->assertCount(2, $schedule);
+        $this->assertSame(array('10 mn', '27 mn'), iterator_to_array($schedule));
     }
 
     public function tearDown()
